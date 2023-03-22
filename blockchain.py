@@ -1,29 +1,32 @@
-### Main Python File
+# Blockchain Demo.
 import hashlib
 
+# Class that defines a message in the blockchain.
+# Takes in the hash for the last message and a list of data to add to the block.
 class MsgBlock:
-    
-    def __init__(self, previous_block_hash, transaction_list):
+    def __init__(self, previous_block_hash, msg_data):
 
         self.previous_block_hash = previous_block_hash
-        self.transaction_list = transaction_list
+        self.msg_data = msg_data
 
-        self.block_data = f"{' - '.join(transaction_list)} - {previous_block_hash}"
+        self.block_data = f"{' - '.join(msg_data)} - {previous_block_hash}"
         self.block_hash = hashlib.sha256(self.block_data.encode()).hexdigest()
 
 
-
+# Class that defines the blockchain as a list of blocks.
 class Blockchain:
     def __init__(self):
         self.chain = []
         self.generate_genesis_block()
 
+    # Create the first block with a hash of 0.
     def generate_genesis_block(self):
         self.chain.append(MsgBlock("0", ["Genesis Block"]))
 
-    def create_block_from_transaction(self, transaction_list):
+    # 
+    def create_block_from_transaction(self, msg_data):
         previous_block_hash = self.last_block.block_hash
-        self.chain.append(MsgBlock(previous_block_hash, transaction_list))
+        self.chain.append(MsgBlock(previous_block_hash, msg_data))
 
     def display_chain(self):
         for i in range(len(self.chain)):
