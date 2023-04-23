@@ -1,5 +1,17 @@
-# Blockchain Demo.
+# Blockchain API.
 import hashlib
+import json
+
+class User:
+    def __init__(self, id, public_key):
+        self.id = id
+        self.public_key = public_key
+
+class selfUser():
+    def __init__(self, id, private_key):
+        self.id = id
+        self.private_key = private_key
+
 
 # Class that defines a message in the blockchain.
 # Takes in the hash for the last message and a list of data to add to the block.
@@ -12,25 +24,31 @@ class MsgBlock:
         self.block_data = f"{' - '.join(msg_data)} - {previous_block_hash}"
         self.block_hash = hashlib.sha256(self.block_data.encode()).hexdigest()
 
-
 # Class that defines the blockchain as a list of blocks.
 class Blockchain:
     # Initialize the blockchain with a genesis block.
-    def __init__(self, user1 = None, user2 = None, filename = None):
-        if filename is not None:
+    def __init__(self, user1, user2, load = False):
+        # Initialize the list that holds the blocks.
+        self.chain = []
+        self.user1 = user1
+        self.user2 = user2
+        
+        if load is not False:
+            filename = "MessageData\\" + str(self.user1) + "_" + str(self.user2) + ".json"
             print("Loading blockchain from file...")
             self.user1 = filename.split('_')[0]
             self.user2 = filename.split('_')[1].split('.')[0]
             with open(filename, 'r') as f:
-                self.chain = json.load(f)
+                for line in f:
+                    temp = json.loads(line)
+                    self.chain.append(MsgBlock(temp['previous_block_hash'], temp['msg_data']))
             return
+        # If 2 users are passed in, create a new blockchain.
         elif user1 is not None and user2 is not None:
             print("Creating new blockchain...")
-            self.user1 = user1
-            self.user2 = user2
-            self.chain = []
             self.generate_genesis_block()
             return
+        # If invalid arguments are passed in, raise an exception.
         else:
             raise Exception("Invalid arguments passed to Blockchain constructor.")
 
@@ -50,16 +68,15 @@ class Blockchain:
             print(f"Data {i + 1}: {self.chain[i].block_data}")
             print(f"Hash {i + 1}: {self.chain[i].block_hash}\n")
 
-    # Write the blockchain to a file.
+    # Write the blockchain to a file in the MessageData folder.
     def write_chain(self):
         # Create the filename.
-        filename = self.user1 + "_" + self.user2 + ".json"
+        filename = "MessageData\\" + str(self.user1) + "_" + str(self.user2) + ".json"
         # Write the blockchain to the file.
         with open(filename, 'w') as f:
             for block in self.chain:
-                f.write(block)
-
-            
+                json.dump(block.__dict__, f)
+                f.write('\n')
 
     # Validate the blockchain.
     def validate_chain(self):
@@ -73,36 +90,3 @@ class Blockchain:
     @property
     def last_block(self):
         return self.chain[-1]
-
-def main():
-    # Start a blockchain between 2 users.
-    user1id = "Alice"
-    user2id = "Bob"
-
-    # User 1 says Hello.
-    m1 = "Hello"
-    # User 2 says Hi.
-    m2 = "Hii"
-    # User 1 says Test.
-    m3 = "Test"
-    # User 2 says Reply.
-    m4 = "Reply"
-
-    # Create a blockchain between 2 users.
-    user1_user2_blockchain = Blockchain(user1id, user2id)
-
-    # Mint the messages onto the blockchain.
-    user1_user2_blockchain.create_block_from_transaction([user1id, m1]);
-    user1_user2_blockchain.create_block_from_transaction([user2id, m2]);
-    user1_user2_blockchain.create_block_from_transaction([user1id, m3]);
-    user1_user2_blockchain.create_block_from_transaction([user2id, m4]);
-
-    # Print out the blockchain.
-    user1_user2_blockchain.display_chain()
-
-    # Validate the blockchain.
-    print(user1_user2_blockchain.validate_chain())
-
-
-if __name__ == "__main__":
-    main()

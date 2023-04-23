@@ -1,4 +1,4 @@
 make:
-	python blockchain.py
+	python main.py
 clean:
-	rm -f *.json
+	rm -f MessageData/*.json
