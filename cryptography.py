@@ -25,6 +25,7 @@ with open('private.pem', 'rb') as f:
 with open('public.pem', 'rb') as f:
     public_key = RSA.import_key(f.read())
 
+
 # Encrypt a message using the public key
 cipher = PKCS1_OAEP.new(public_key)
 message = b'Hello, world!'
