@@ -1,17 +1,19 @@
 import socket
 
 def handle_client(client_socket, address, clients):
-    
-	# Save client's message in variable
+    # Save client's message in variable
     message = client_socket.recv(1024).decode()
 
-    if address[0] in clients:
+    # Extract username from message
+    username = message.split()[0]
+
+    if username in clients:
         # If the client is already in dict, update entry
-        clients[address[0]]['address'] = address
-        clients[address[0]]['message'] = message
+        clients[username]['address'] = address
+        clients[username]['message'] = message
     else:
         # Otherwise, add entry
-        clients[address[0]] = {'address': address, 'message': message}
+        clients[username] = {'address': address, 'message': message}
 
     # Send a response
     response = 'Key updated'
