@@ -1,8 +1,4 @@
-# Public/private cryptography demo.
-
-
 # Need to do: pip install PyCryptodome
-
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
