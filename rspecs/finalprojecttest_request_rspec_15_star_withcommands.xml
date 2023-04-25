@@ -1,0 +1,296 @@
+<rspec xmlns="http://www.geni.net/resources/rspec/3" xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" xmlns:tour="http://www.protogeni.net/resources/rspec/ext/apt-tour/1" xmlns:jacks="http://www.protogeni.net/resources/rspec/ext/jacks/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geni.net/resources/rspec/3    http://www.geni.net/resources/rspec/3/request.xsd" type="request">
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-clemson" component_manager_id="urn:publicid:IDN+instageni.clemson.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/Xen-VM.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3">
+<disk_image xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD"/>
+</sliver_type>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/server-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/server-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-19"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-29"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-31"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-35"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-37"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-39"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-45"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-47"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-49"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-51"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-1"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-3"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-5"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-7"/>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-11"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-cenic" component_manager_id="urn:publicid:IDN+instageni.cenic.net+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-18"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-case" component_manager_id="urn:publicid:IDN+geni.case.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-28"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-rutgers" component_manager_id="urn:publicid:IDN+instageni.rutgers.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-30"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-stanford" component_manager_id="urn:publicid:IDN+instageni.stanford.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-34"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-illinois" component_manager_id="urn:publicid:IDN+instageni.illinois.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-36"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-kentucky" component_manager_id="urn:publicid:IDN+lan.sdn.uky.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-38"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-texas" component_manager_id="urn:publicid:IDN+instageni.utdallas.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-46"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-vermont" component_manager_id="urn:publicid:IDN+instageni.uvm.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-48"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-chicago" component_manager_id="urn:publicid:IDN+geni.uchicago.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-50"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-ucla" component_manager_id="urn:publicid:IDN+instageni.idre.ucla.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+
+
+
+
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-44"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-sox" component_manager_id="urn:publicid:IDN+instageni.sox.net+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-0"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-hawaii" component_manager_id="urn:publicid:IDN+instageni.hawaii.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-2"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-michigan" component_manager_id="urn:publicid:IDN+instageni.research.umich.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-4"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-vtech" component_manager_id="urn:publicid:IDN+instageni.arc.vt.edu+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-6"/>
+</node>
+<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-gpo" component_manager_id="urn:publicid:IDN+bbn.instageni.net+authority+cm">
+<icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+<sliver_type xmlns="http://www.geni.net/resources/rspec/3" name="default-vm"/>
+<services xmlns="http://www.geni.net/resources/rspec/3">
+<execute xmlns="http://www.geni.net/resources/rspec/3" command="sh /local/node-setup.sh" shell="/bin/sh"/>
+<install xmlns="http://www.geni.net/resources/rspec/3" url="https://github.com/Jay-Adusumilli/BlockChainApp/blob/main/setup-scripts/node-setup.tar.gz" install_path="/local"/>
+</services>
+<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-10"/>
+</node>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-9">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-18"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-19"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.cenic.net+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-14">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-28"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-29"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+geni.case.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-15">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-30"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-31"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.rutgers.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-17">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-34"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-35"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.stanford.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-18">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-36"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-37"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.illinois.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-19">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-38"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-39"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+lan.sdn.uky.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-22">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-44"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-45"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.idre.ucla.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-23">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-46"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-47"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.utdallas.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-24">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-48"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-49"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.uvm.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-25">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-50"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-51"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+geni.uchicago.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-0">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-0"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-1"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.sox.net+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-1">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-2"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-3"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.hawaii.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-2">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-4"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-5"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.research.umich.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-3">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-6"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-7"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.arc.vt.edu+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-5">
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-10"/>
+<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-11"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+bbn.instageni.net+authority+cm"/>
+<component_manager xmlns="http://www.geni.net/resources/rspec/3" name="urn:publicid:IDN+instageni.clemson.edu+authority+cm"/>
+</link>
+</rspec>
