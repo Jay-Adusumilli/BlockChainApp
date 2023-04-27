@@ -5,10 +5,10 @@
 echo "Test"
 
 # 1. Download Python, PyCryptodome
-sudo apt sudo apt-get update
+sudo apt-get update
 sudo apt-get install python3.8 python3-pip -y
 
-pip install pycryptodome -y
+sudo apt-get install pycryptodome -y
 
 
 # 2. Clone repository
