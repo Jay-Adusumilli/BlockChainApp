@@ -1,63 +1,136 @@
 import socket
+import sys
+import json
 import random
-from threading import Thread
-from datetime import datetime
-from colorama import Fore, init, Back
+import os.path
 
-# init colors
-init()
+def send_setup_message(username, public_key):
+    message = {
+        "type": "setup",
+        "username": username,
+        "public_key": public_key
+    }
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(('localhost', 4400))
+        s.sendall(json.dumps(message).encode())
+        response = s.recv(1024).decode()
+        print response
+        s.close()
+        return True
+    except Exception as e:
+        print "Error connecting to server:", e
+        return False
 
-# set the available colors
-colors = [Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.LIGHTBLACK_EX,
-    Fore.LIGHTBLUE_EX, Fore.LIGHTCYAN_EX, Fore.LIGHTGREEN_EX,
-    Fore.LIGHTMAGENTA_EX, Fore.LIGHTRED_EX, Fore.LIGHTWHITE_EX,
-    Fore.LIGHTYELLOW_EX, Fore.MAGENTA, Fore.RED, Fore.WHITE, Fore.YELLOW
-]
+if len(sys.argv) == 2:
+    if os.path.isfile('username.txt'):
+        with open('username.txt', 'r') as f:
+            username = f.readline().strip()
+    else:
+        public_key = random.randint(1, 100)
+        username = "user" + str(random.randint(1, 100))
+        with open('username.txt', 'w') as f:
+            f.write(username)
+        if send_setup_message(username, public_key):
+            print "Setup successful"
+        else:
+            print "Setup failed"
 
-# choose a random color for the client
-client_color = random.choice(colors)
+    message = sys.argv[1]
+    print "Sending message:", message, "as", username
+    # TODO: send forward message to server with the given message
+elif len(sys.argv) == 3 and sys.argv[1] == "directory":
+    # TODO: send directory message to server and print the response
+    pass
+else:
+    if os.path.isfile('username.txt'):
+        with open('username.txt', 'r') as f:
+            username = f.readline().strip()
+    else:
+        public_key = random.randint(1, 100)
+        username = "user" + str(random.randint(1, 100))
+        with open('username.txt', 'w') as f:
+            f.write(username)
+        if send_setup_message(username, public_key):
+            print "Setup successful"
+        else:
+            print "Setup failed"
 
-# server's IP address
-# if the server is not on this machine,
-# put the private (network) IP address (e.g 192.168.1.2)
-SERVER_HOST = "127.0.0.1"
-SERVER_PORT = 5002 # server's port
-separator_token = "<SEP>" # we will use this to separate the client name & message
+    print "Username:", username
+    print "Public key:", public_key
 
-# initialize TCP socket
-s = socket.socket()
-print(f"[*] Connecting to {SERVER_HOST}:{SERVER_PORT}...")
-# connect to the server
-s.connect((SERVER_HOST, SERVER_PORT))
-print("[+] Connected.")
+def send_directory_message():
+    message = {
+        "type": "directory"
+    }
 
-# prompt the client for a name
-name = input("Enter your name: ")
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect(('localhost', 4400))
+    except Exception as e:
+        print "Error connecting to server:", e
+        return False
 
-def listen_for_messages():
-    while True:
-        message = s.recv(1024).decode()
-        print("\n" + message)
+    message_str = json.dumps(message)
+    s.sendall(message_str.encode())
 
-# make a thread that listens for messages to this client & print them
-t = Thread(target=listen_for_messages)
-# make the thread daemon so it ends whenever the main thread ends
-t.daemon = True
-# start the thread
-t.start()
+    response = s.recv(1024).decode()
+    print "Server response:", response
+    s.close()
+    return True
 
 
-while True:
-    # input message we want to send to the server
-    to_send =  input()
-    # a way to exit the program
-    if to_send.lower() == 'q':
-        break
-    # add the datetime, name & the color of the sender
-    date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    to_send = f"{client_color}[{date_now}] {name}{separator_token}{to_send}{Fore.RESET}"
-    # finally, send the message
-    s.send(to_send.encode())
+def send_forward_message(username, message):
+    message = {
+        "type": "forward",
+        "username": username,
+        "message": message
+    }
 
-# close the socket
-s.close()
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect(('localhost', 4400))
+    except Exception as e:
+        print "Error connecting to server:", e
+        return False
+
+    message_str = json.dumps(message)
+    s.sendall(message_str.encode())
+
+    response = s.recv(1024).decode()
+    print "Server response:", response
+    s.close()
+    return True
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print "Usage: python client.py <message>"
+        sys.exit()
+
+    username = "user" + str(random.randint(1, 100))
+    public_key = random.randint(1, 100)
+
+    print "Username:", username
+    print "Public key:", public_key
+
+    message_type = sys.argv[1]
+
+    if message_type == "setup":
+        if send_setup_message(username, public_key):
+            with open('username.txt', 'w') as f:
+                f.write(username)
+    elif message_type == "directory":
+        with open('username.txt', 'r') as f:
+            username = f.readline().strip()
+
+        send_directory_message(username)
+    elif message_type == "forward":
+        with open('username.txt', 'r') as f:
+            username = f.readline().strip()
+
+        message = " ".join(sys.argv[2:])
+        send_forward_message(username, message)
+    else:
+        print "Invalid message type. Valid message types are 'setup', 'directory', and 'forward'"
+        sys.exit()

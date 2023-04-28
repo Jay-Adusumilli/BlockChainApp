@@ -1,62 +1,106 @@
 import socket
-from threading import Thread
+import json
 
-# server's IP address
-SERVER_HOST = socket.gethostname()
-SERVER_PORT = 5002 # port we want to use
-separator_token = "<SEP>" # we will use this to separate the client name & message
+# Dictionary to store registered clients
+clients = {}
 
-# initialize list/set of all connected client's sockets
-client_sockets = set()
-# create a TCP socket
-s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-# make the port as reusable port
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-# bind the socket to the address we specified
-s.bind((SERVER_HOST, SERVER_PORT))
-# listen for upcoming connections
-s.listen(5)
-print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
+# Function to handle setup messages from clients
+def handle_setup(message, address):
+    global clients
+    username = message['username']
+    public_key = message['public_key']
 
+    if username in clients:
+        # If the client is already in the dictionary, update their entry
+        clients[username]['address'] = address
+        clients[username]['public_key'] = public_key
+    else:
+        # Otherwise, add a new entry for the client
+        clients[username] = {'address': address, 'public_key': public_key}
 
-def listen_for_client(cs):
-    """
-    This function keep listening for a message from `cs` socket
-    Whenever a message is received, broadcast it to all other connected clients
-    """
+    # Send a response to the client
+    response = {'status': 'success'}
+    return response
+
+# Function to handle directory messages from clients
+def handle_directory():
+    global clients
+    users = list(clients.keys())
+    response = {'status': 'success', 'users': users}
+    return response
+
+# Function to handle forward messages from clients
+def handle_forward(message):
+    global clients
+    recipient = message['recipient']
+    message_text = message['message']
+
+    if recipient in clients:
+        # If the recipient is in the dictionary, forward the message to them
+        recipient_address = clients[recipient]['address']
+        sender = message['sender']
+        forward_message = {'sender': sender, 'message': message_text}
+        forward_message_str = json.dumps(forward_message).encode()
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect(recipient_address)
+        client_socket.send(forward_message_str)
+        client_socket.close()
+        response = {'status': 'success'}
+    else:
+        # Otherwise, return an error message to the sender
+        response = {'status': 'error', 'message': 'Recipient not found'}
+
+    return response
+
+# Function to handle client requests
+def handle_client(client_socket, address):
+    global clients
+    # Receive message from client
+    message_str = client_socket.recv(1024).decode()
+    message = json.loads(message_str)
+
+    # Handle message based on type
+    message_type = message['type']
+    if message_type == 'setup':
+        response = handle_setup(message, address)
+    elif message_type == 'directory':
+        response = handle_directory()
+    elif message_type == 'forward':
+        sender_address = address
+        sender = [k for k, v in clients.items() if v['address'] == sender_address][0]
+        message['sender'] = sender
+        response = handle_forward(message)
+    else:
+        response = {'status': 'error', 'message': 'Invalid message type'}
+
+    # Send response to client
+    response_str = json.dumps(response).encode()
+    client_socket.send(response_str)
+
+    # Close client socket
+    client_socket.close()
+
+# Function to start the server
+def start_server():
+    global clients
+    # Create socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Bind socket to localhost on port 12345
+    server_socket.bind(('localhost', 4400))
+
+    # Set socket to allow 5 connections
+    server_socket.listen(5)
+
+    print('Server started')
+
     while True:
-        try:
-            # keep listening for a message from `cs` socket
-            msg = cs.recv(1024).decode()
-        except Exception as e:
-            # client no longer connected
-            # remove it from the set
-            print(f"[!] Error: {e}")
-            client_sockets.remove(cs)
-        else:
-            # if we received a message, replace the <SEP>
-            # token with ": " for nice printing
-            msg = msg.replace(separator_token, ": ")
-        # iterate over all connected sockets
-        for client_socket in client_sockets:
-            # and send the message
-            client_socket.send(msg.encode())
+        # Wait for a connection
+        client_socket, address = server_socket.accept()
 
-while True:
-    # we keep listening for new connections all the time
-    client_socket, client_address = s.accept()
-    print(f"[+] {client_address} connected.")
-    # add the new connected client to connected sockets
-    client_sockets.add(client_socket)
-    # start a new thread that listens for each client's messages
-    t = Thread(target=listen_for_client, args=(client_socket,))
-    # make the thread daemon so it ends whenever the main thread ends
-    t.daemon = True
-    # start the thread
-    t.start()
+        # Handle client request in a new thread
+        handle_client(client_socket, address)
 
-# close client sockets
-for cs in client_sockets:
-    cs.close()
-# close server socket
-s.close()
+# Start the server
+start_server()
+
