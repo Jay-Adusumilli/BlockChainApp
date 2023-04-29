@@ -55,9 +55,6 @@ def handle_forward(message):
 # Function to handle client requests
 def handle_client(client_socket, address):
     global clients
-    # Print connection information
-    print(f"New connection from {address}")
-
     # Receive message from client
     message_str = client_socket.recv(1024).decode()
     message = json.loads(message_str)

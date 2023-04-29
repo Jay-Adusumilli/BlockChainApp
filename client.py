@@ -22,12 +22,13 @@ def send_setup_message(username, public_key):
         print("Error connecting to server:", e)
         return False
 
+public_key = random.randint(1, 100)
+
 if len(sys.argv) == 2:
     if os.path.isfile('username.txt'):
         with open('username.txt', 'r') as f:
             username = f.readline().strip()
     else:
-        public_key = random.randint(1, 100)
         username = "user" + str(random.randint(1, 100))
         with open('username.txt', 'w') as f:
             f.write(username)
@@ -47,7 +48,6 @@ else:
         with open('username.txt', 'r') as f:
             username = f.readline().strip()
     else:
-        public_key = random.randint(1, 100)
         username = "user" + str(random.randint(1, 100))
         with open('username.txt', 'w') as f:
             f.write(username)
@@ -59,26 +59,33 @@ else:
     print("Username:", username)
     print("Public key:", public_key)
 
-def send_directory_message():
-    message = {
-        "type": "directory"
-    }
+def send_directory_message(username):
+    # Create a message dictionary
+    message = {'type': 'directory', 'username': username}
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.connect(('localhost', 4400))
-    except Exception as e:
-        print("Error connecting to server:", e)
-        return False
+    # Convert the message to a JSON string and encode it
+    message_str = json.dumps(message).encode()
 
-    message_str = json.dumps(message)
-    s.sendall(message_str.encode())
+    # Connect to the server and send the message
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(('localhost', 4400))
+    client_socket.send(message_str)
 
-    response = s.recv(1024).decode()
-    print("Server response:", response)
-    s.close()
-    return True
+    # Receive and decode the server's response
+    response_str = client_socket.recv(1024).decode()
+    response = json.loads(response_str)
 
+    # Print the list of users returned by the server
+    if response['status'] == 'success':
+        users = response['users']
+        print('Users:')
+        for user in users:
+            print(user)
+    else:
+        print('Error:', response['message'])
+
+    # Close the socket
+    client_socket.close()
 
 def send_forward_message(username, message):
     message = {
