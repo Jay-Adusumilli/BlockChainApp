@@ -1,143 +1,117 @@
 import socket
-import sys
+import threading
 import json
-import random
-import os.path
 
-def send_setup_message(username, public_key):
-    message = {
-        "type": "setup",
-        "username": username,
-        "public_key": public_key
-    }
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(('localhost', 4400))
-        s.sendall(json.dumps(message).encode())
-        response = s.recv(1024).decode()
-        print(response)
-        s.close()
-        return True
-    except Exception as e:
-        print("Error connecting to server:", e)
-        return False
+def handle_incoming_messages(client_socket):
+    buffer = b''  # buffer to store received data
+    while True:
+        # Receive message from server
+        data = client_socket.recv(1024)
+        if not data:
+            break
+        buffer += data
 
-public_key = random.randint(1, 100)
+        # Split buffer into individual messages
+        messages = buffer.split(b'\n')
 
-if len(sys.argv) == 2:
-    if os.path.isfile('username.txt'):
-        with open('username.txt', 'r') as f:
-            username = f.readline().strip()
-    else:
-        username = "user" + str(random.randint(1, 100))
-        with open('username.txt', 'w') as f:
-            f.write(username)
-        if send_setup_message(username, public_key):
-            print("Setup successful")
-        else:
-            print("Setup failed")
+        # Process each complete message
+        for message in messages[:-1]:
+            message_str = message.decode()
+            message = json.loads(message_str)
 
-    message = sys.argv[1]
-    print("Sending message:", message, "as", username)
-    # TODO: send forward message to server with the given message
-elif len(sys.argv) == 3 and sys.argv[1] == "directory":
-    # TODO: send directory message to server and print the response
-    pass
-else:
-    if os.path.isfile('username.txt'):
-        with open('username.txt', 'r') as f:
-            username = f.readline().strip()
-    else:
-        username = "user" + str(random.randint(1, 100))
-        with open('username.txt', 'w') as f:
-            f.write(username)
-        if send_setup_message(username, public_key):
-            print("Setup successful")
-        else:
-            print("Setup failed")
+            # Handle message based on type
+            message_type = message['type']
+            if message_type == 'forward':
+                sender = message['sender']
+                message_text = message['message']
+                print(f"Received message from {sender}: {message_text}")
+            elif message_type == 'error':
+                print(f"Error: {message['message']}")
+            else:
+                print(f"Invalid message type: {message_type}")
 
-    print("Username:", username)
-    print("Public key:", public_key)
+        # Store any remaining partial message in buffer
+        buffer = messages[-1]
 
-def send_directory_message(username):
-    # Create a message dictionary
-    message = {'type': 'directory', 'username': username}
-
-    # Convert the message to a JSON string and encode it
+# Function to send a forward message
+def send_forward_message(client_socket, recipient, message_text):
+    # Construct message
+    message = {'type': 'forward', 'recipient': recipient, 'message': message_text}
     message_str = json.dumps(message).encode()
 
-    # Connect to the server and send the message
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost', 4400))
+    # Send message to server
     client_socket.send(message_str)
 
-    # Receive and decode the server's response
+# Function to send a directory message
+def send_directory_message(client_socket):
+    # Construct message
+    message = {'type': 'directory'}
+    message_str = json.dumps(message).encode()
+
+    # Send message to server
+    client_socket.send(message_str)
+
+    # Receive response from server
     response_str = client_socket.recv(1024).decode()
     response = json.loads(response_str)
 
-    # Print the list of users returned by the server
+    # Handle response
     if response['status'] == 'success':
         users = response['users']
-        print('Users:')
+        print("Registered users:")
         for user in users:
             print(user)
     else:
-        print('Error:', response['message'])
+        print(f"Error: {response['message']}")
 
-    # Close the socket
-    client_socket.close()
+# Function to handle client actions
+def handle_client():
+    # Create socket
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def send_forward_message(username, message):
-    message = {
-        "type": "forward",
-        "username": username,
-        "message": message
-    }
+    # Connect to server
+    server_address = ('localhost', 4400)
+    client_socket.connect(server_address)
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.connect(('localhost', 4400))
-    except Exception as e:
-        print("Error connecting to server:", e)
-        return False
+    # Start thread to handle incoming messages
+    incoming_thread = threading.Thread(target=handle_incoming_messages, args=(client_socket,))
+    incoming_thread.start()
 
-    message_str = json.dumps(message)
-    s.sendall(message_str.encode())
+    # Get username and public key from user
+    username = input("Enter your username: ")
+    public_key = input("Enter your public key: ")
 
-    response = s.recv(1024).decode()
-    print("Server response:", response)
-    s.close()
-    return True
+    # Send setup message to server
+    message = {'type': 'setup', 'username': username, 'public_key': public_key}
+    message_str = json.dumps(message).encode()
+    client_socket.send(message_str)
 
+    # Receive response from server
+    response_str = client_socket.recv(1024).decode()
+    response = json.loads(response_str)
 
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Usage: python client.py <message>")
-        sys.exit()
-
-    username = "user" + str(random.randint(1, 100))
-    public_key = random.randint(1, 100)
-
-    print("Username:", username)
-    print("Public key:", public_key)
-
-    message_type = sys.argv[1]
-
-    if message_type == "setup":
-        if send_setup_message(username, public_key):
-            with open('username.txt', 'w') as f:
-                f.write(username)
-    elif message_type == "directory":
-        with open('username.txt', 'r') as f:
-            username = f.readline().strip()
-
-        send_directory_message(username)
-    elif message_type == "forward":
-        with open('username.txt', 'r') as f:
-            username = f.readline().strip()
-
-        message = " ".join(sys.argv[2:])
-        send_forward_message(username, message)
+    # Handle response
+    if response['status'] == 'success':
+        print(f"Connected to server as {username}")
     else:
-        print("Invalid message type. Valid message types are 'setup', 'directory', and 'forward'")
-        sys.exit()
+        print(f"Error: {response['message']}")
+        return
+
+    # Loop to handle user input
+    while True:
+        action = input("Enter an action (send, directory, quit): ")
+        if action == 'send':
+            recipient = input("Enter recipient username: ")
+            message_text = input("Enter message: ")
+            send_forward_message(client_socket, recipient, message_text)
+        elif action == 'directory':
+            send_directory_message(client_socket)
+        elif action == 'quit':
+            client_socket.close()
+            return
+        else:
+            print("Invalid action")
+
+# Start the client
+handle_client()
+
