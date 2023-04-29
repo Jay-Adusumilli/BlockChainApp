@@ -33,14 +33,28 @@ def handle_incoming_messages(client_socket):
         # Store any remaining partial message in buffer
         buffer = messages[-1]
 
-# Function to send a forward message
 def send_forward_message(client_socket, recipient, message_text):
-    # Construct message
-    message = {'type': 'forward', 'recipient': recipient, 'message': message_text}
-    message_str = json.dumps(message).encode()
+    # Prepare the message to forward
+    message = {'type': 'forward', 'recipient': recipient, 'message_text': message_text}
+    message_str = json.dumps(message)
 
-    # Send message to server
-    client_socket.send(message_str)
+    # Send the message to the server
+    client_socket.send(message_str.encode())
+
+    # Wait for a response from the server
+    try:
+        response_str = client_socket.recv(1024).decode()
+    except ConnectionAbortedError:
+        print("Connection aborted by server")
+        return
+
+    response = json.loads(response_str)
+
+    # Check the response status
+    if response['status'] == 'success':
+        print("Message forwarded successfully")
+    else:
+        print("Failed to forward message:", response['message'])
 
 # Function to send a directory message
 def send_directory_message(client_socket):
@@ -71,7 +85,11 @@ def handle_client():
 
     # Connect to server
     server_address = ('localhost', 4400)
-    client_socket.connect(server_address)
+    try:
+        client_socket.connect(server_address)
+    except ConnectionRefusedError:
+        print("Error: Connection refused. Make sure the server is running.")
+        return
 
     # Start thread to handle incoming messages
     incoming_thread = threading.Thread(target=handle_incoming_messages, args=(client_socket,))
@@ -105,7 +123,12 @@ def handle_client():
             message_text = input("Enter message: ")
             send_forward_message(client_socket, recipient, message_text)
         elif action == 'directory':
-            send_directory_message(client_socket)
+            try:
+                send_directory_message(client_socket)
+            except ConnectionAbortedError:
+                print("Error: Connection to server lost.")
+                client_socket.close()
+                return
         elif action == 'quit':
             client_socket.close()
             return

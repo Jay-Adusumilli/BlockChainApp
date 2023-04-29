@@ -4,11 +4,11 @@ import json
 # Dictionary to store registered clients
 clients = {}
 
-# Function to handle setup messages from clients
 def handle_setup(message, address):
     global clients
     username = message['username']
     public_key = message['public_key']
+    print(f"New client connected: {username} ({address[0]}) - Public key: {public_key}")
 
     if username in clients:
         # If the client is already in the dictionary, update their entry
@@ -23,13 +23,21 @@ def handle_setup(message, address):
     return response
 
 # Function to handle directory messages from clients
-def handle_directory():
+def handle_directory(client_socket):
     global clients
     users = list(clients.keys())
     response = {'status': 'success', 'users': users}
-    return response
 
-# Function to handle forward messages from clients
+    # Print connected clients' info
+    print("Connected clients:")
+    for username, client_info in clients.items():
+        address = client_info['address']
+        public_key = client_info['public_key']
+        print(f"Username: {username}, IP: {address[0]}, Public Key: {public_key}")
+
+    response_str = json.dumps(response)
+    client_socket.send(response_str.encode())
+
 def handle_forward(message):
     global clients
     recipient = message['recipient']
@@ -38,7 +46,9 @@ def handle_forward(message):
     if recipient in clients:
         # If the recipient is in the dictionary, forward the message to them
         recipient_address = clients[recipient]['address']
+        sender_address = clients[message['sender']]['address']
         sender = message['sender']
+        print(f"Forwarding message from {sender} ({sender_address[0]}) to {recipient} ({recipient_address[0]}): {message_text}")
         forward_message = {'sender': sender, 'message': message_text}
         forward_message_str = json.dumps(forward_message).encode()
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
