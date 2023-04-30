@@ -1,77 +1,49 @@
 import socket
 from threading import Thread
+import sys
 
 class server:
-    def __init__(host, port):
-        # Create socket
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def __init__(self):
+        print("Starting server...")
+        self.server_listen_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_listen_socket_1.bind(("localhost", 12345))
 
-        # Bind socket
-        server_socket.bind((host, port))
-
-        # Set socket to allow 5 connections
-        server_socket.listen(5)
-
-        return server_socket
-
+        self.server_listen_socket_1.listen(4)
+        self.client1, self.address1 = self.server_listen_socket_1.accept()
+        self.client2, self.address2 = self.server_listen_socket_1.accept()
+        self.client3, self.address3 = self.server_listen_socket_1.accept()
+        self.client4, self.address4 = self.server_listen_socket_1.accept()
 
 
-def handle_client(client_socket, address, clients):
-    
-	# Save client's message in variable
-    message = client_socket.recv(1024).decode()
+    def run(self):
+        while True:
+            try:
+                data1 = self.client1.recv(1024).decode()
+                data2 = self.client2.recv(1024).decode()
+                data3 = self.client3.recv(1024).decode()
+                data4 = self.client4.recv(1024).decode()
+                if data1:
+                    self.client2.send(data1.encode())
+                    self.client3.send(data1.encode())
+                    self.client4.send(data1.encode())
+                if data2:
+                    self.client1.send(data2.encode())
+                    self.client3.send(data2.encode())
+                    self.client4.send(data2.encode())
+                if data3:
+                    self.client1.send(data3.encode())
+                    self.client2.send(data3.encode())
+                    self.client4.send(data3.encode())
+                if data4:
+                    self.client1.send(data4.encode())
+                    self.client2.send(data4.encode())
+                    self.client3.send(data4.encode())
+                
+            except KeyboardInterrupt:
+                print("Closing server...")
+                sys.exit()
 
-    if address[0] in clients:
-        # If the client is already in dict, update entry
-        clients[address[0]]['address'] = address
-        clients[address[0]]['message'] = message
-    else:
-        # Otherwise, add entry
-        clients[address[0]] = {'address': address, 'message': message}
 
-    # Send a response
-    response = 'Key updated'
-    client_socket.send(response.encode())
-
-    # TEMP! Remove this after testing
-    print('Connected clients:', clients)
-
-def start_server(host, port):
-
-    # Create socket
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Bind socket
-    server_socket.bind((host, port))
-
-    # Set socket to allow 5 connections
-    server_socket.listen(5)
-
-    # Empty dictionary for saving client ip's and keys
-    clients = {}
-
-    print('Server started, listening on', (host, port))
-
-    while True:
-        try:
-            # Wait for a connection
-            client_socket, address = server_socket.accept()
-
-            # TEMP: remove after testing
-            print("Got a connection from " + str(address[0]))	
-
-            # Handle client's request
-            handle_client(client_socket, address, clients)
-
-            # Close client socket
-            client_socket.close()
-        except KeyboardInterrupt:
-            print('Server stopped')
-            break
-        
-
-# This should be unhardcoded from localhost
-# We should be using GENI machine IP
-if __name__ == '__main__':
-    start_server('localhost', 12345)
-
+if __name__ == "__main__":
+    server = server()
+    server.run()
