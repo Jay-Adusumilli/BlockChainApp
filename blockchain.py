@@ -155,7 +155,14 @@ class Blockchain:
             if previous != current:
                 return False, self.chain[i].block_hash
         return True, self.last_block.block_hash
+    
+    # A mallicious user can change the data in a block.
+    def change_block_data(self, block_number, new_data):
+        self.chain[block_number].msg_data = new_data
+        self.chain[block_number].block_data = self.chain[block_number].previous_block_hash + self.chain[block_number].userid + "_" + self.chain[block_number].msg_data
+        self.chain[block_number].block_hash = hashlib.sha256(self.chain[block_number].block_data.encode()).hexdigest()
 
+    # Get the last block in the chain.
     @property
     def last_block(self):
         return self.chain[-1]
