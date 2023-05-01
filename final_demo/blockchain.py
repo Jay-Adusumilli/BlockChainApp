@@ -3,7 +3,8 @@ import hashlib
 import warnings
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-
+from time import sleep
+import random
 
 # Class that defines a user list.
 class UserList:
@@ -71,9 +72,10 @@ class Blockchain:
     def create_block_from_transaction(self, user, msg_data):
         public_key = self.userlist.getPrivateKey()
         cipher = PKCS1_OAEP.new(public_key)
-        encypted_msg = cipher.encrypt(msg_data)
+        sleep(0.01 * random.randrange(10,30))
         previous_block_hash = self.last_block.block_hash
-        self.chain.append(MsgBlock(previous_block_hash, user, encypted_msg))
+        self.chain.append(MsgBlock(previous_block_hash, user, msg_data))
+        #self.display_chain()
 
     # Decrypts the message in a block.
     def decrypt_block(self, block):
@@ -98,6 +100,7 @@ class Blockchain:
     # Display the blockchain.
     def display_chain(self):
         for i in range(len(self.chain)):
+            print(f"Msg {i + 1}: {self.chain[i].msg_data}")
             print(f"Data {i + 1}: {self.chain[i].block_data}")
             print(f"Hash {i + 1}: {self.chain[i].block_hash}\n")
 
@@ -109,12 +112,6 @@ class Blockchain:
             if previous != current:
                 return False, self.chain[i].block_hash
         return True, self.last_block.block_hash
-    
-    # A mallicious user can change the data in a block.
-    def change_block_data(self, block_number, new_data):
-        self.chain[block_number].msg_data = new_data
-        self.chain[block_number].block_data = self.chain[block_number].previous_block_hash + self.chain[block_number].userid + "_" + self.chain[block_number].msg_data
-        self.chain[block_number].block_hash = hashlib.sha256(self.chain[block_number].block_data.encode()).hexdigest()
 
     # Get the last block in the chain.
     @property

@@ -1,6 +1,8 @@
 import socket
 import threading
 from blockchain import *
+import random
+import time
 
 client_number = 1
 client_id = "client" + str(client_number)
@@ -68,56 +70,37 @@ class Client:
         self.blockchain_client3_client4.display_chain()
 
     def send_messages(self):
-        while True:
-            command = input('Enter a command > ')
-            if command == "quit":
-                self.client_socket.close()
-                break
-            elif command == "validate":
-                x = self.validate_chains(True)
-                #print(x)
-                continue
-            elif command == "view":
-                self.display_blockchains()
-            elif command == "mal_msg":
-                message = input('Enter a message to send > ')
-                client = input('Select a client > ')
-                if client == "client2":
-                    msg = client_id + ">" + "client2" + ":" + message
-                    message = input("Enter a message to add to blockchain > ")
-                    self.blockchain_client1_client2.create_block_from_transaction(client_id, message)
-                    self.client_socket.sendall(msg.encode())
-                elif client == "client3":
-                    msg = client_id + ">" + "client3" + ":" + message
-                    message = input("Enter a message to add to blockchain > ")
-                    self.blockchain_client1_client3.create_block_from_transaction(client_id, message)
-                    self.client_socket.sendall(msg.encode())
-                elif client == "client4":
-                    msg = client_id + ">" + "client4" + ":" + message
-                    message = input("Enter a message to add to blockchain > ")
-                    self.blockchain_client1_client4.create_block_from_transaction(client_id, message)
-                    self.client_socket.sendall(msg.encode())
-                else:
-                    print("Invalid client")
-                    continue
-            elif command == "msg":
-                message = input('Enter a message > ')
-                client = input('Select a client > ')
-                if client == "client2":
-                    msg = client_id + ">" + "client2" + ":" + message
-                    self.blockchain_client1_client2.create_block_from_transaction(client_id, message)
-                    self.client_socket.sendall(msg.encode())
-                elif client == "client3":
-                    msg = client_id + ">" + "client3" + ":" + message
-                    self.blockchain_client1_client3.create_block_from_transaction(client_id, message)
-                    self.client_socket.sendall(msg.encode())
-                elif client == "client4":
-                    msg = client_id + ">" + "client4" + ":" + message
-                    self.blockchain_client1_client4.create_block_from_transaction(client_id, message)
-                    self.client_socket.sendall(msg.encode())
-                else:
-                    print("Invalid client")
-                    continue
+        time.sleep(1)
+        clients = ["client2", "client3", "client4"]
+        num_sent = 0
+        total_byte_len = 0
+        start_time = time.time()
+        print("Started sending")
+        for i in range(100):
+            print(i)
+            num_sent += 1
+            byte_len = random.randrange(600, 700)
+            time.sleep(0.001 * byte_len)
+            total_byte_len += byte_len
+            message = str(random.randbytes(byte_len))
+            client = random.choice(clients)
+            msg = client_id + ">" + client + ":" + message
+            self.blockchain_client1_client2.create_block_from_transaction(client_id, message)
+            self.client_socket.sendall(msg.encode())
+            self.validate_chains(True)
+        
+        finish_time = time.time()
+        print("Finished sending\n\n")
+        print("Total messages sent: " + str(num_sent))
+        print("Total bytes sent: " + str(total_byte_len))
+        print("Total time taken: " + str(finish_time - start_time))
+        print("Average messages per second: " + str(num_sent / (finish_time - start_time)))
+        print("Average bytes per second: " + str(total_byte_len / (finish_time - start_time)))
+        print("Average seconds per message: " + str((finish_time - start_time) / num_sent))
+        print("Average message size: " + str(total_byte_len / num_sent))
+
+
+
 
     def receive_messages(self):
         while True:
@@ -182,6 +165,8 @@ class Client:
         self.client_socket.close()
 
 if __name__ == '__main__':
+
+    random.seed()
 
     # Read all public and private keys from files:
     # 1

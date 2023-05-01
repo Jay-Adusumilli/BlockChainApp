@@ -2,7 +2,7 @@ import socket
 import threading
 from blockchain import *
 
-client_number = 1
+client_number = 4
 client_id = "client" + str(client_number)
 
 
@@ -92,8 +92,8 @@ class Client:
                     message = input("Enter a message to add to blockchain > ")
                     self.blockchain_client1_client3.create_block_from_transaction(client_id, message)
                     self.client_socket.sendall(msg.encode())
-                elif client == "client4":
-                    msg = client_id + ">" + "client4" + ":" + message
+                elif client == "client1":
+                    msg = client_id + ">" + "client1" + ":" + message
                     message = input("Enter a message to add to blockchain > ")
                     self.blockchain_client1_client4.create_block_from_transaction(client_id, message)
                     self.client_socket.sendall(msg.encode())
@@ -111,8 +111,8 @@ class Client:
                     msg = client_id + ">" + "client3" + ":" + message
                     self.blockchain_client1_client3.create_block_from_transaction(client_id, message)
                     self.client_socket.sendall(msg.encode())
-                elif client == "client4":
-                    msg = client_id + ">" + "client4" + ":" + message
+                elif client == "client1":
+                    msg = client_id + ">" + "client1" + ":" + message
                     self.blockchain_client1_client4.create_block_from_transaction(client_id, message)
                     self.client_socket.sendall(msg.encode())
                 else:
@@ -205,13 +205,13 @@ if __name__ == '__main__':
     with open('keys\\public4.pem', 'rb') as f:
         public_key_4 = RSA.import_key(f.read())
 
-    user_private_key = private_key_1
+    user_private_key = private_key_4
 
     # Create userlist
     userlist = UserList(client_id, user_private_key)
     userlist.add_user("client2", public_key_2)
     userlist.add_user("client3", public_key_3)
-    userlist.add_user("client4", public_key_4)
+    userlist.add_user("client1", public_key_1)
 
 
 
