@@ -80,7 +80,6 @@ class Client:
             print(i)
             num_sent += 1
             byte_len = random.randrange(600, 700)
-            time.sleep(0.001 * byte_len)
             total_byte_len += byte_len
             message = str(random.randbytes(byte_len))
             client = random.choice(clients)
